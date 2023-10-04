@@ -1,25 +1,34 @@
-import React, { useContext } from 'react';
-import { ColumnsContext, TasksContext } from '../context/InitContext';
-import Column from './Column';
+import React, { useState } from 'react';
+import Columns from './Columns';
+import Navbar from './Navbar';
+
+const ColumnsPattern = [
+    { id: 1, name: 'ToDo', limit: 4 },
+    { id: 2, name: 'Doing', limit: 4 },
+    { id: 3, name: 'Done', limit: 4 },
+];
+const example = [
+    { id: 1, name: 'Task1', idColumn: 1, user: 'Joanna', describe: 'opis taska lorem21' },
+    { id: 2, name: 'Task2', idColumn: 2, user: 'Joanna', describe: 'opis taska lorem21' },
+    { id: 3, name: 'Task3', idColumn: 2, user: 'Joanna', describe: 'opis taska lorem21' },
+];
+
+export const TasksContext = React.createContext();
 
 function Board() {
-    const columns = useContext(ColumnsContext);
-    const tasks = useContext(TasksContext);
+    const TaskProvider = TasksContext.Provider;
+    const [tasks, setTasks] = useState(example);
+
+    console.log(tasks);
 
     return (
-      <ColumnsContext.Provider value={columns}>
-        <div>
-          <ul style={{ display: 'flex' }}>
-            {columns.map((column) => {
-                        return <Column
-                          key={column.id}
-                          column={column}
-                          tasks={tasks}
-                        />;
-                    })}
-          </ul>
-        </div>
-      </ColumnsContext.Provider>
+      <TaskProvider value={tasks}>
+        <Navbar />
+        <Columns
+          column={ColumnsPattern}
+          tasks={tasks}
+        />
+      </TaskProvider>
     );
 }
 

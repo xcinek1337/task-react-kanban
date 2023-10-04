@@ -21,5 +21,6 @@
 		"react/jsx-closing-tag-location": ["warn"],
 		"react/jsx-closing-bracket-location": ["warn"],
 		"react/jsx-first-prop-new-line": ["warn", "multiline"]
+		
 	}
 }
