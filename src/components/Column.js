@@ -3,20 +3,18 @@ import React from 'react';
 
 import Task from './Task';
 
-function Column(props) {
-    const { column } = props;
-
-    const filteredTask = column
+function Column({ column, tasks }) {
+    const filteredTasks = tasks.filter((task) => task.idColumn === column.id);
 
     return (
-    
-            <div>
-                <h3>{column.name}</h3>
-                <ul>
-                   
-                </ul>
-            </div>
-
+        <div style={{marginRight: '100px'}}>
+            <h3>{column.name}</h3>
+            <ul>
+                {filteredTasks.map((filteredTask) => (
+                    <Task key={filteredTask.id} task={filteredTask} />
+                ))}
+            </ul>
+        </div>
     );
 }
 
