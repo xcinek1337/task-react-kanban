@@ -18,7 +18,9 @@ function Buttons() {
     return (
       <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
 
-            {/* TO JEST KOMENATRZ DO commita z 05.10 */}
+        {/* TO JEST KOMENATRZ DO commita z 05.10 'init functions to operate stage' */}
+        {/* zastanwiam sie czy jest sens renderowania komponentow Button.js tutaj skoro prosciej byloby mi obslugiwac style (na elemencie button:html) czy przycisk powinien byc widoczny jesli jest w 1 lub 3 kolumnie, ale tak mysle w momencie pisania tego, dzieje sie to samo co wyzej w komentarzu, czyli rozdzielam dlugosc kodu na 2 komponenty, co moze powodowac wieksza czytelnosc */}
+            
 
         <Button
           context={'<='}
