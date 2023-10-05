@@ -22,7 +22,7 @@ function Task({ tasks }) {
             <button style={{visibility: task.idColumn === 3 ? 'visible' : 'hidden'}}>x</button>
             <h3>{task.name}</h3>
             <span>{task.describe}</span>
-            {/* prosze o ocene czy zasotowanie tutaj probidera jest ok. Omijam kopomnent Buttons i przekazywanie tam podowjnie propsow */}
+           
             <ButtonContext.Provider value={contextValueBtns}>
               <Buttons />
             </ButtonContext.Provider>

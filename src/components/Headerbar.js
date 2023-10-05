@@ -1,5 +1,5 @@
 import React from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 function Headerbar({ column }) {
     return (
@@ -18,6 +18,6 @@ function Headerbar({ column }) {
 }
 
 Headerbar.propTypes = {
-  column: propTypes.object.isRequired,
+  column: PropTypes.object.isRequired,
 };
 export default Headerbar;

@@ -2,31 +2,38 @@ import React, { useContext } from 'react';
 import Button from './Button';
 
 import { FuncHandlerContext } from './Board';
+import { ButtonContext } from './Task';
 
-//zastanawiam sie czy ten komponent, to nie jest przekombinowanie, ale w sumie handlery od clickow nie powiekszaja kodu w task.js
 function Buttons() {
     const { nextStage, previousStage } = useContext(FuncHandlerContext);
+    const { idColumn } = useContext(ButtonContext);
+    console.log(idColumn);
 
     const handleClickNext = (takskId) => {
+        // tu pewnie if sprawdjacy czy miesci sie w limicie albo w boardzie, bo tam mam dostep do ifnormacji o stanie
         nextStage(takskId);
     };
-    const handleClickPrevious=(takskId)=>{
-        previousStage(takskId)
+    const handleClickPrevious = (takskId) => {
+        // tu pewnie if sprawdjacy czy miesci sie w limicie albo w boardzie, bo tam mam dostep do ifnormacji o stanie
+        previousStage(takskId);
+    };
 
-    }
+    const prevBtnStyles = {
+        visibility: idColumn > 1 ? 'visible' : 'hidden',
+    };
+    const nextBtnStyles = {
+        visibility: idColumn === 3 ? 'hidden' : 'visible',
+    };
 
     return (
       <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-
-        {/* TO JEST KOMENATRZ DO commita z 05.10 'init functions to operate stage' */}
-        {/* zastanwiam sie czy jest sens renderowania komponentow Button.js tutaj skoro prosciej byloby mi obslugiwac style (na elemencie button:html) czy przycisk powinien byc widoczny jesli jest w 1 lub 3 kolumnie, ale tak mysle w momencie pisania tego, dzieje sie to samo co wyzej w komentarzu, czyli rozdzielam dlugosc kodu na 2 komponenty, co moze powodowac wieksza czytelnosc */}
-            
-
         <Button
+          styles={prevBtnStyles}
           context={'<='}
           onClick={handleClickPrevious}
         />
         <Button
+          styles={nextBtnStyles}
           onClick={handleClickNext}
           context={'=>'}
         />
