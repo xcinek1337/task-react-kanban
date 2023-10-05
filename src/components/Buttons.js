@@ -3,18 +3,24 @@ import Button from './Button';
 
 import { FuncHandlerContext } from './Board';
 import { ButtonContext } from './Task';
+import { ColumnsContext } from './Board';
 
 function Buttons() {
     const { nextStage, previousStage } = useContext(FuncHandlerContext);
     const { idColumn } = useContext(ButtonContext);
-    console.log(idColumn);
+    const { ColumnsPattern } = useContext(ColumnsContext);
+
+    const oneColumnCounter = ColumnsPattern.map((column) => column.id === idColumn);
+    console.log('co ja sprawdzam wtf', oneColumnCounter);
 
     const handleClickNext = (takskId) => {
         // tu pewnie if sprawdjacy czy miesci sie w limicie albo w boardzie, bo tam mam dostep do ifnormacji o stanie
+
         nextStage(takskId);
     };
     const handleClickPrevious = (takskId) => {
         // tu pewnie if sprawdjacy czy miesci sie w limicie albo w boardzie, bo tam mam dostep do ifnormacji o stanie
+
         previousStage(takskId);
     };
 
@@ -22,7 +28,7 @@ function Buttons() {
         visibility: idColumn > 1 ? 'visible' : 'hidden',
     };
     const nextBtnStyles = {
-        visibility: idColumn === 3 ? 'hidden' : 'visible',
+        visibility: idColumn === ColumnsPattern.length ? 'hidden' : 'visible',
     };
 
     return (

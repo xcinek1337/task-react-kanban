@@ -1,12 +1,15 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React,{useContext} from 'react';
 import PropTypes from 'prop-types';
 
 import Buttons from './Buttons';
+import { ColumnsContext } from './Board';
 
 export const ButtonContext = React.createContext();
 
 function Task({ tasks }) {
+  const { ColumnsPattern } = useContext(ColumnsContext);
+
     const task = tasks.map((task) => {
         const contextValueBtns={
           taskId: task.id,
@@ -18,17 +21,16 @@ function Task({ tasks }) {
             key={task.id}
             style={{ display: 'flex', flexDirection: 'column', listStyle: 'none', border: '1px solid tomato' }}
           >
-            {/* tę trójkę przydaloby sie zastapic columns.lenght */}
-            <button style={{visibility: task.idColumn === 3 ? 'visible' : 'hidden'}}>x</button>
+            <button style={{visibility: task.idColumn === ColumnsPattern.length ? 'visible' : 'hidden'}}>x</button>
             <h3>{task.name}</h3>
             <span>{task.describe}</span>
-           
             <ButtonContext.Provider value={contextValueBtns}>
               <Buttons />
             </ButtonContext.Provider>
           </li>
         );
     });
+
     return <div style={{ textAlign: 'center' }}>{task}</div>;
 }
 

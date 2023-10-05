@@ -5,6 +5,7 @@ function Headerbar({ column }) {
     return (
       <div
         style={{
+                position: 'relative',
                 backgroundColor: 'tomato',
                 padding: '10px 50px',
                 display: 'flex',
@@ -13,6 +14,7 @@ function Headerbar({ column }) {
             }}
       >
         <h3>{column.name}</h3>
+        <p style={{ position: 'absolute', right: '5px', top: '-18px' }}>Limit: {column.limit}</p>
       </div>
     );
 }
