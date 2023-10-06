@@ -1,13 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { FuncHandlerContext } from './Board';
-function Navbar() {
-    const { testCreateTask } = useContext(FuncHandlerContext);
-
-    const handleCreateTask = () => {
-        testCreateTask();
-    };
-
+function Navbar({ openPopup }) {
     return (
       <nav
         style={{
@@ -21,7 +15,7 @@ function Navbar() {
         <span>&#x235F;</span>
         <h1>Kanban</h1>
         <span
-          onClick={handleCreateTask}
+          onClick={openPopup}
           style={{ color: '#A6A6A6', cursor: 'pointer' }}
         >
           Add Task &#x2795;
@@ -29,4 +23,9 @@ function Navbar() {
       </nav>
     );
 }
+
+Navbar.propTypes = {
+    openPopup: PropTypes.any,
+};
+
 export default Navbar;

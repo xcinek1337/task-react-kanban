@@ -2,13 +2,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Headerbar from './Headerbar';
+import HeaderBar from './HeaderBar';
 import Task from './Task';
 
 function Column({ column, tasks }) {
     return (
         <div style={{ border: '1px solid black' }}>
-            <Headerbar column={column} />
+            <HeaderBar column={column} />
             <Task tasks={tasks} />
         </div>
     );
