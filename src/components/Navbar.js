@@ -14,12 +14,13 @@ function Navbar({ openPopup }) {
       >
         <span>&#x235F;</span>
         <h1>Kanban</h1>
-        <span
+        <button
           onClick={openPopup}
-          style={{ color: '#A6A6A6', cursor: 'pointer' }}
+          style={{ color: '#A6A6A6', cursor: 'pointer', backgroundColor:'transparent',
+        padding:'6px 9px', border: '1px solid #A6A6A6', borderRadius:'10px' }}
         >
           Add Task &#x2795;
-        </span>
+        </button>
       </nav>
     );
 }

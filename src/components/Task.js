@@ -31,8 +31,7 @@ function Task({ tasks }) {
             </button>
             <h3>{task.name}</h3>
             <p>{task.describe}</p>
-            <p style={{textAlign:'end'}}>{task.user}</p>
-
+            <p style={{textAlign:'end', paddingRight:'5px'}}>{task.user}</p>
             <ButtonContext.Provider value={contextValueBtns}>
               <Buttons />
             </ButtonContext.Provider>

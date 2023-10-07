@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReducer, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const styles = {
@@ -40,7 +40,9 @@ const styleButton = {
     cursor: 'pointer',
     // w css dodac hover
 };
-function TaskForm({handleSetTask, closePopup }) {
+function TaskForm({ handleSetTask, closePopup }) {
+    const formRef = useRef();
+
     const fieldsList = [
         { name: 'name', type: 'text', defaultValue: '', validation: { isReq: true } },
         { name: 'describe', type: 'textarea', validation: { isReq: true } },
@@ -66,6 +68,29 @@ function TaskForm({handleSetTask, closePopup }) {
     const [state, dispatch] = useReducer(reducer, init);
     const [errors, setErrors] = useState([]);
 
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                closePopup();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+
+        const handleClickOutsidePopup = (event) => {
+            const darkBackground = document.querySelector('.dark');
+
+            if (darkBackground && event.target === darkBackground) {
+                closePopup();
+            }
+        };
+        window.addEventListener('click', handleClickOutsidePopup);
+  
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('click', handleClickOutsidePopup);
+        };
+    }, [closePopup]);
+
     const renderFieldList = () => {
         return fieldsList.map(({ name, type }) => {
             let tag;
@@ -73,6 +98,11 @@ function TaskForm({handleSetTask, closePopup }) {
             if (type === 'textarea') {
                 tag = (
                   <textarea
+                    onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSubmit(e);
+                            }
+                        }}
                     style={inputStyle}
                     onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
                     type={type}
@@ -84,6 +114,11 @@ function TaskForm({handleSetTask, closePopup }) {
             } else {
                 tag = (
                   <input
+                    onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSubmit(e);
+                            }
+                        }}
                     style={inputStyle}
                     onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
                     type={type}
@@ -143,13 +178,16 @@ function TaskForm({handleSetTask, closePopup }) {
 
         if (validationErrors.length === 0) {
             closePopup();
-            handleSetTask(state)
-            
+            handleSetTask(state);
         }
     };
 
     return (
-      <div style={styles}>
+      <div
+        style={styles}
+        ref={formRef}
+      >
+        <h2 style={{ textAlign: 'center' }}>Task</h2>
         <form
           style={formStyles}
           onSubmit={handleSubmit}
@@ -175,6 +213,6 @@ function TaskForm({handleSetTask, closePopup }) {
 
 TaskForm.propTypes = {
     closePopup: PropTypes.any,
-    handleSetTask: PropTypes.any
+    handleSetTask: PropTypes.any,
 };
 export default TaskForm;
