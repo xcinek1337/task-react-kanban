@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 
 const styles = {
-    border: '1px solid red',
+    border: '5px solid tomato',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     position: 'absolute',
     zIndex: 11,
     width: '400px',
-    backgroundColor: 'white',
-    padding: '20px',
+    backgroundColor: '#008299',
+    padding: '50px',
     borderRadius: '5px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
 };
@@ -20,95 +20,161 @@ const formStyles = {
     maxWidth: '300px',
     margin: '0 auto',
 };
+const stylesForLabel = {
+    color: 'tomato',
+    fontSize: '24px',
+    display: 'flex',
+    flexDirection: 'column',
+    paddingBottom: '30px',
+};
+const inputStyle = {
+    borderRadius: '5px',
+    border: '2px solid tomato',
+    padding: '10px 0',
+};
+const styleButton = {
+    backgroundColor: 'tomato',
+    borderRadius: '10px',
+    border: 'transparent',
+    padding: '8px 12px',
+    cursor: 'pointer',
+    // w css dodac hover
+};
+function TaskForm({handleSetTask, closePopup }) {
+    const fieldsList = [
+        { name: 'name', type: 'text', defaultValue: '', validation: { isReq: true } },
+        { name: 'describe', type: 'textarea', validation: { isReq: true } },
+        { name: 'user', type: 'text', defaultValue: '', validation: { isReq: true } },
+    ];
 
-function TaskForm({ closePopup }) {
-    const [taskData, setTaskData] = useState({
-        task: '',
-        name: '',
-        text: '',
+    const init = {};
+
+    fieldsList.forEach(({ name, defaultValue }) => {
+        init[name] = defaultValue;
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setTaskData({ ...taskData, [name]: value });
-    };
+    function reducer(state, action) {
+        switch (action.type) {
+            case 'change': {
+                return { ...state, [action.key]: action.value, idColumn: 1 };
+            }
+            default:
+                return state;
+        }
+    }
 
-    const clearForm = () => {
-        setTaskData({
-            task: '',
-            name: '',
-            text: '',
+    const [state, dispatch] = useReducer(reducer, init);
+    const [errors, setErrors] = useState([]);
+
+    const renderFieldList = () => {
+        return fieldsList.map(({ name, type }) => {
+            let tag;
+
+            if (type === 'textarea') {
+                tag = (
+                  <textarea
+                    style={inputStyle}
+                    onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
+                    type={type}
+                    name={name}
+                    id={name}
+                    value={state[name]}
+                  />
+                );
+            } else {
+                tag = (
+                  <input
+                    style={inputStyle}
+                    onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
+                    type={type}
+                    name={name}
+                    id={name}
+                    value={state[name]}
+                  />
+                );
+            }
+
+            return (
+              <div key={name}>
+                <label
+                  style={stylesForLabel}
+                  htmlFor={name}
+                >
+                  {name}
+                  {tag}
+                </label>
+              </div>
+            );
         });
     };
 
-    const submitForm = (e) => {
-        e.preventDefault();
+    const renderErros = () => {
+        return (
+            errors.length > 0 && (
+            <ul>
+              {errors.map((message) => (
+                <li key={message}>{message}</li>
+                    ))}
+            </ul>
+            )
+        );
+    };
+    function validate(data, values) {
+        const errors = [];
 
-        const newTask = {
-            name: taskData.task,
-            owner: taskData.name,
-            describe: taskData.text,
-        };
-        clearForm();
-       
-        closePopup();
+        data.forEach(({ name, validation }) => {
+            const value = values[name];
+
+            if (validation.isReq && value === '') {
+                errors.push(`pole ${name} jest wymagane.`);
+            }
+            if (validation.regex && !validation.regex.test(value)) {
+                errors.push(`pole ${name} jest wypelnione nieprawidlowo.`);
+            }
+        });
+        return errors;
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const validationErrors = validate(fieldsList, state);
+
+        setErrors(validationErrors);
+
+        if (validationErrors.length === 0) {
+            closePopup();
+            handleSetTask(state)
+            
+        }
     };
 
     return (
       <div style={styles}>
-        <h2 style={{ textAlign: 'center' }}>Create Task</h2>
         <form
-          action={''}
-          onSubmit={submitForm}
           style={formStyles}
+          onSubmit={handleSubmit}
         >
-          <div>
-            <label htmlFor={'task'}>
-              nazwa taska
-              <input
-                type={'text'}
-                name={'task'}
-                value={taskData.task}
-                onChange={handleInputChange}
-              />
-            </label>
-          </div>
-          <div>
-            <label htmlFor={'name'}>
-              owner
-              <input
-                type={'text'}
-                name={'name'}
-                value={taskData.name}
-                onChange={handleInputChange}
-              />
-            </label>
-          </div>
-          <div>
-            <label htmlFor={'text'}>
-              opis
-              <textarea
-                type={'text'}
-                name={'text'}
-                value={taskData.text}
-                onChange={handleInputChange}
-              />
-            </label>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <button 
-              type={"button"} 
-              onClick={()=> closePopup()}
-            >cancel
+          {renderFieldList()}
+          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <button
+              style={styleButton}
+              onClick={() => closePopup()}
+            >
+              cancel
             </button>
-            <button type={'submit'}>submit</button>
+            <input
+              style={styleButton}
+              type={'submit'}
+            />
           </div>
         </form>
+        {renderErros()}
       </div>
     );
 }
 
 TaskForm.propTypes = {
     closePopup: PropTypes.any,
+    handleSetTask: PropTypes.any
 };
 export default TaskForm;

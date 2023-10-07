@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import Columns from './Columns';
 import Navbar from './Navbar';
@@ -25,10 +26,8 @@ const ColumnsPattern = [
 ];
 const exampleTasks = [
     { id: 1, name: 'Task1', idColumn: 1, user: 'Joanna', describe: 'opis taska lorem21' },
-    { id: 4, name: 'Task12', idColumn: 1, user: 'Joanna', describe: 'opis taska lorem21' },
     { id: 2, name: 'Task2', idColumn: 1, user: 'Joanna', describe: 'opis taska lorem21' },
     { id: 3, name: 'Task3', idColumn: 2, user: 'Joanna', describe: 'opis taska lorem21' },
-    { id: 5, name: 'Task3w', idColumn: 1, user: 'Joanna', describe: 'opis taska lorem21' },
 ];
 
 export const FuncHandlerContext = React.createContext();
@@ -38,6 +37,14 @@ function Board() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [columns, setColumns] = useState(ColumnsPattern);
     const [tasks, setTasks] = useState(exampleTasks);
+
+    const handleSetTask = (taskData) => {
+        const addingId = { ...taskData, id: uuidv4() };
+        console.log(tasks);
+        console.log(addingId);
+        setTasks([...tasks, addingId]);
+
+    };
 
     const resetLimitReached = () => {
         const updatedColumns = columns.map((column) => {
@@ -109,17 +116,14 @@ function Board() {
     };
 
     return (
-      <ColumnsContext.Provider value={{ columns }}>
-        <FuncHandlerContext.Provider value={{ nextStage, previousStage, deleteDoneTask }}>
-          {isPopupOpen && <div style={overlayStyle}></div>}
-          {isPopupOpen && <TaskFrom closePopup={closePopup} />}
-          <Navbar openPopup={openPopup} />
-          <Columns
-            columnList={columns}
-            tasks={tasks}
-          />
-        </FuncHandlerContext.Provider>
-      </ColumnsContext.Provider>
+        <ColumnsContext.Provider value={{ columns }}>
+            <FuncHandlerContext.Provider value={{ nextStage, previousStage, deleteDoneTask }}>
+                {isPopupOpen && <div style={overlayStyle}></div>}
+                {isPopupOpen && <TaskFrom closePopup={closePopup} handleSetTask={handleSetTask} />}
+                <Navbar openPopup={openPopup} />
+                <Columns columnList={columns} tasks={tasks} />
+            </FuncHandlerContext.Provider>
+        </ColumnsContext.Provider>
     );
 }
 

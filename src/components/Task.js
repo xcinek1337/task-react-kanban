@@ -30,7 +30,9 @@ function Task({ tasks }) {
               x
             </button>
             <h3>{task.name}</h3>
-            <span>{task.describe}</span>
+            <p>{task.describe}</p>
+            <p style={{textAlign:'end'}}>{task.user}</p>
+
             <ButtonContext.Provider value={contextValueBtns}>
               <Buttons />
             </ButtonContext.Provider>
