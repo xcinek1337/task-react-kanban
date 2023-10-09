@@ -7,7 +7,7 @@ import Task from './Task';
 
 function Column({ column, tasks }) {
     return (
-        <div style={{ border: '1px solid black' }}>
+        <div className="column">
             <HeaderBar column={column} />
             <Task tasks={tasks} />
         </div>

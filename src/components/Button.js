@@ -10,8 +10,10 @@ function Button({ context, onClick, styles }) {
     return (
       <button
         style={styles}
+        className={"task__move-btn"}
         onClick={() => onClick(taskId)}
-      >{context}
+        dangerouslySetInnerHTML={{ __html: context }}
+      >
       </button>
     )
 }

@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import Button from './Button';
 
-import { FuncHandlerContext } from './Board';
+import { Kanban } from './Board';
 import { ButtonContext } from './Task';
-import { ColumnsContext } from './Board';
+
 
 function Buttons() {
-    const { nextStage, previousStage } = useContext(FuncHandlerContext);
+    const { nextStage, previousStage, columns} = useContext(Kanban);
     const { idColumn } = useContext(ButtonContext);
-    const { columns } = useContext(ColumnsContext);
+   
 
     const handleClickNext = (takskId) => {
         nextStage(takskId);
@@ -25,16 +25,16 @@ function Buttons() {
     };
 
     return (
-      <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+      <div className={"task__move-btns"}>
         <Button
           styles={prevBtnStyles}
-          context={'<='}
+          context={'&#8592;'}
           onClick={handleClickPrevious}
         />
         <Button
           styles={nextBtnStyles}
           onClick={handleClickNext}
-          context={'=>'}
+          context={'&#8594;'}
         />
       </div>
     );

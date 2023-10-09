@@ -3,14 +3,13 @@ import React,{useContext} from 'react';
 import PropTypes from 'prop-types';
 
 import Buttons from './Buttons';
-import { ColumnsContext } from './Board';
-import { FuncHandlerContext } from './Board';
+
+import { Kanban } from './Board';
 
 export const ButtonContext = React.createContext();
 
 function Task({ tasks }) {
-    const { columns } = useContext(ColumnsContext);
-    const { deleteDoneTask } = useContext(FuncHandlerContext);
+    const { deleteDoneTask } = useContext(Kanban);
 
     const task = tasks.map((task) => {
         const contextValueBtns = {
@@ -20,18 +19,17 @@ function Task({ tasks }) {
 
         return (
           <li
+            className={'column__task task'}
             key={task.id}
-            style={{ display: 'flex', flexDirection: 'column', listStyle: 'none', border: '1px solid tomato' }}
           >
             <button
+              className={"task__delete-btn"}
               onClick={() => deleteDoneTask(task.id)}
-              style={{ visibility: task.idColumn === columns.length ? 'visible' : 'hidden' }}
-            >
-              x
+            >x
             </button>
-            <h3>{task.name}</h3>
-            <p>{task.describe}</p>
-            <p style={{textAlign:'end', paddingRight:'5px'}}>{task.user}</p>
+            <h3 className={"task__header"} >{task.name}</h3>
+            <p className={"task__describe"} >{task.describe}</p>
+            <p className={"task__user"} >{task.user}</p>
             <ButtonContext.Provider value={contextValueBtns}>
               <Buttons />
             </ButtonContext.Provider>
@@ -39,7 +37,7 @@ function Task({ tasks }) {
         );
     });
 
-    return <div style={{ textAlign: 'center' }}>{task}</div>;
+    return <>{task}</>;
 }
 
 Task.propTypes = {

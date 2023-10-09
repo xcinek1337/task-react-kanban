@@ -1,59 +1,12 @@
 import React, { useState, useReducer, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const styles = {
-    border: '5px solid tomato',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    position: 'absolute',
-    zIndex: 11,
-    width: '400px',
-    backgroundColor: '#008299',
-    padding: '50px',
-    borderRadius: '5px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-};
-const formStyles = {
-    display: 'flex',
-    flexDirection: 'column',
-    maxWidth: '300px',
-    margin: '0 auto',
-};
-const stylesForLabel = {
-    color: 'tomato',
-    fontSize: '24px',
-    display: 'flex',
-    flexDirection: 'column',
-    paddingBottom: '30px',
-};
-const inputStyle = {
-    borderRadius: '5px',
-    border: '2px solid tomato',
-    padding: '10px 0',
-};
-const styleButton = {
-    backgroundColor: 'tomato',
-    borderRadius: '10px',
-    border: 'transparent',
-    padding: '8px 12px',
-    cursor: 'pointer',
-    // w css dodac hover
-};
+import { validate, getInitFormValues } from '../helper';
+
 function TaskForm({ handleSetTask, closePopup }) {
     const formRef = useRef();
 
-    const fieldsList = [
-        { name: 'name', type: 'text', defaultValue: '', validation: { isReq: true } },
-        { name: 'describe', type: 'textarea', validation: { isReq: true } },
-        { name: 'user', type: 'text', defaultValue: '', validation: { isReq: true } },
-    ];
-
-    const init = {};
-
-    fieldsList.forEach(({ name, defaultValue }) => {
-        init[name] = defaultValue;
-    });
+    const { init, fieldsList } = getInitFormValues();
 
     function reducer(state, action) {
         switch (action.type) {
@@ -68,29 +21,6 @@ function TaskForm({ handleSetTask, closePopup }) {
     const [state, dispatch] = useReducer(reducer, init);
     const [errors, setErrors] = useState([]);
 
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === 'Escape') {
-                closePopup();
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-
-        const handleClickOutsidePopup = (event) => {
-            const darkBackground = document.querySelector('.dark');
-
-            if (darkBackground && event.target === darkBackground) {
-                closePopup();
-            }
-        };
-        window.addEventListener('click', handleClickOutsidePopup);
-  
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('click', handleClickOutsidePopup);
-        };
-    }, [closePopup]);
-
     const renderFieldList = () => {
         return fieldsList.map(({ name, type }) => {
             let tag;
@@ -103,7 +33,7 @@ function TaskForm({ handleSetTask, closePopup }) {
                                 handleSubmit(e);
                             }
                         }}
-                    style={inputStyle}
+                    className={'form__input'}
                     onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
                     type={type}
                     name={name}
@@ -119,7 +49,7 @@ function TaskForm({ handleSetTask, closePopup }) {
                                 handleSubmit(e);
                             }
                         }}
-                    style={inputStyle}
+                    className={'form__input'}
                     onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
                     type={type}
                     name={name}
@@ -132,11 +62,10 @@ function TaskForm({ handleSetTask, closePopup }) {
             return (
               <div key={name}>
                 <label
-                  style={stylesForLabel}
+                  className={'form__label'}
                   htmlFor={name}
                 >
-                  {name}
-                  {tag}
+                  {name}*{tag}
                 </label>
               </div>
             );
@@ -148,27 +77,40 @@ function TaskForm({ handleSetTask, closePopup }) {
             errors.length > 0 && (
             <ul>
               {errors.map((message) => (
-                <li key={message}>{message}</li>
+                <li
+                  className={'form__error-msg'}
+                  key={message}
+                >
+                  {message}
+                </li>
                     ))}
             </ul>
             )
         );
     };
-    function validate(data, values) {
-        const errors = [];
 
-        data.forEach(({ name, validation }) => {
-            const value = values[name];
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                closePopup();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
 
-            if (validation.isReq && value === '') {
-                errors.push(`pole ${name} jest wymagane.`);
+        const handleClickOutsidePopup = (event) => {
+            const darkBackground = document.querySelector('.dark-background');
+
+            if (darkBackground && event.target === darkBackground) {
+                closePopup();
             }
-            if (validation.regex && !validation.regex.test(value)) {
-                errors.push(`pole ${name} jest wypelnione nieprawidlowo.`);
-            }
-        });
-        return errors;
-    }
+        };
+        window.addEventListener('click', handleClickOutsidePopup);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('click', handleClickOutsidePopup);
+        };
+    }, [closePopup]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -184,24 +126,24 @@ function TaskForm({ handleSetTask, closePopup }) {
 
     return (
       <div
-        style={styles}
+        className={'popup'}
         ref={formRef}
       >
-        <h2 style={{ textAlign: 'center' }}>Task</h2>
+        <h2 className={'popup__header'}>Task</h2>
         <form
-          style={formStyles}
+          className={'popup__form form'}
           onSubmit={handleSubmit}
         >
           {renderFieldList()}
-          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+          <div className={'form__div-btns'}>
             <button
-              style={styleButton}
+              className={'form__btn'}
               onClick={() => closePopup()}
             >
-              cancel
+              Cancel
             </button>
             <input
-              style={styleButton}
+              className={'form__btn'}
               type={'submit'}
             />
           </div>

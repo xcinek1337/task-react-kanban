@@ -4,7 +4,7 @@ import Column from './Column';
 
 function Columns({ columnList, tasks }) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+      <main className={"main__kanban"} >
         {columnList.map((column) => {
                 const filteredTasks = tasks.filter((task) => task.idColumn === column.id);
                 return (
@@ -15,7 +15,7 @@ function Columns({ columnList, tasks }) {
                   />
                 )
             })}
-      </div>
+      </main>
     );
 }
 

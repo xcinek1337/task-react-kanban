@@ -1,67 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import Columns from './Columns';
 import Navbar from './Navbar';
 import TaskFrom from './TaskForm';
 
-const overlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 5,
-};
-const errorStyle ={
-    position: 'absolute',
-    left: '6%',
-    top:'3%',
-    border:'3px solid tomato',
-    zIndex:'22',
-    backgroundColor:'#008299',
-    color:'red'
-}
-
-// docelowo to zmieni miejsce w jakiejs utilities.js
+export const Kanban = React.createContext();
 const ColumnsPattern = [
-    { id: 1, name: 'ToDo', limit: 4, isLimitReached: false },
-    { id: 2, name: 'Doing', limit: 4, isLimitReached: false },
-    { id: 3, name: 'Testing', limit: 4, isLimitReached: false },
-    { id: 4, name: 'Done2', limit: 999, isLimitReached: false },
+    { id: 1, name: 'ToDo', limit: 4, isLimitReached: false, color: '#F48998' },
+    { id: 2, name: 'Doing', limit: 4, isLimitReached: false, color: '#F4E789' },
+    { id: 3, name: 'Testing', limit: 4, isLimitReached: false, color: '#89F48F' },
+    { id: 4, name: 'Done', limit: 999, isLimitReached: false, color: '#89E3F4' },
 ];
-const exampleTasks = [
-    { id: 1, name: 'Task1', idColumn: 1, user: 'Joanna', describe: 'opis taska lorem21' },
-    { id: 2, name: 'Task2', idColumn: 1, user: 'Joanna', describe: 'opis taska lorem21' },
-    { id: 3, name: 'Task3', idColumn: 1, user: 'Joanna', describe: 'opis taska lorem21' },
-];
-
-export const FuncHandlerContext = React.createContext();
-export const ColumnsContext = React.createContext();
 
 function Board() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [maxLimitPopup, setMaxLimitPopup] = useState(false)
+    const [maxLimitPopup, setMaxLimitPopup] = useState(false);
     const [columns, setColumns] = useState(ColumnsPattern);
-    const [tasks, setTasks] = useState(exampleTasks);
+    const [tasks, setTasks] = useState([]);
+
+  
+    const saveTasksToLocalStorage = (tasks) => {
+        localStorage.setItem('kanbanTasks', JSON.stringify(tasks));
+    };
+
+    const loadTasksFromLocalStorage = () => {
+        const savedTasks = localStorage.getItem('kanbanTasks');
+        return savedTasks ? JSON.parse(savedTasks) : [];
+    };
+
+   
+    useEffect(() => {
+        const loadedTasks = loadTasksFromLocalStorage();
+        setTasks(loadedTasks);
+    }, []);
 
     const handleSetTask = (taskData) => {
-        const taksWithIdColumn1 = tasks.filter((task) => task.idColumn === 1);
+        const tasksWithIdColumn1 = tasks.filter((task) => task.idColumn === 1);
 
-        if (taksWithIdColumn1.length < 4) {
+        if (tasksWithIdColumn1.length < 4) {
             const newTask = { ...taskData, id: uuidv4() };
-            setTasks([...tasks, newTask]);
-        } else {
-         
-            setMaxLimitPopup(true)
-            setInterval(() => {
-                setMaxLimitPopup(false)
+            const newTasks = [...tasks, newTask];
+            setTasks(newTasks);
+            saveTasksToLocalStorage(newTasks); 
+            setMaxLimitPopup(true);
+            setTimeout(() => {
+                setMaxLimitPopup(false);
             }, 4000);
         }
     };
+
 
     const resetLimitReached = () => {
         const updatedColumns = columns.map((column) => {
@@ -85,6 +73,7 @@ function Board() {
         });
 
         setTasks(updatedTasks);
+        saveTasksToLocalStorage(updatedTasks); 
     };
 
     const previousStage = (taskId) => {
@@ -103,6 +92,7 @@ function Board() {
         });
 
         setTasks(updatedTasks);
+        saveTasksToLocalStorage(updatedTasks); 
     };
 
     const setlimitReached = (columnId) => {
@@ -123,6 +113,7 @@ function Board() {
     const deleteDoneTask = (taskId) => {
         const updatedTasks = tasks.filter((task) => task.id !== taskId);
         setTasks(updatedTasks);
+        saveTasksToLocalStorage(updatedTasks)
     };
     const openPopup = () => {
         setIsPopupOpen(true);
@@ -133,27 +124,24 @@ function Board() {
     };
 
     return (
-      <ColumnsContext.Provider value={{ columns }}>
-        <FuncHandlerContext.Provider value={{ nextStage, previousStage, deleteDoneTask }}>
-          {maxLimitPopup && <div style={errorStyle}><p>Limit Tasków w zakładce ToDo został przekroczony</p></div>}         
-          {isPopupOpen && 
-          <div
-            className={"dark"}
-            style={overlayStyle}
-          >
-          </div>}
-          {isPopupOpen && <TaskFrom
-            closePopup={closePopup}
-            handleSetTask={handleSetTask}
-                          />}
-
-          <Navbar openPopup={openPopup} />
-          <Columns
-            columnList={columns}
-            tasks={tasks}
-          />
-        </FuncHandlerContext.Provider>
-      </ColumnsContext.Provider>
+      <Kanban.Provider value={{ columns, nextStage, previousStage, deleteDoneTask }}>
+        <div
+          className={'error-new-task'}
+          style={{ top: maxLimitPopup ? '3%' : '-30%' }}
+        >
+          <p>reached the maximum number of tasks </p>
+        </div>
+        {isPopupOpen && <div className={'dark-background'}></div>}
+        {isPopupOpen && <TaskFrom
+          closePopup={closePopup}
+          handleSetTask={handleSetTask}
+                        />}
+        <Navbar openPopup={openPopup} />
+        <Columns
+          columnList={columns}
+          tasks={tasks}
+        />
+      </Kanban.Provider>
     );
 }
 
