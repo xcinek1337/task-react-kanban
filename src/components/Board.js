@@ -42,7 +42,8 @@ function Board() {
             const newTask = { ...taskData, id: uuidv4() };
             const newTasks = [...tasks, newTask];
             setTasks(newTasks);
-            saveTasksToLocalStorage(newTasks); 
+            saveTasksToLocalStorage(newTasks);
+        } else {
             setMaxLimitPopup(true);
             setTimeout(() => {
                 setMaxLimitPopup(false);

@@ -22,54 +22,36 @@ function TaskForm({ handleSetTask, closePopup }) {
     const [errors, setErrors] = useState([]);
 
     const renderFieldList = () => {
-        return fieldsList.map(({ name, type }) => {
-            let tag;
+      return fieldsList.map(({ name, type }) => {
+          const Component = type;
 
-            if (type === 'textarea') {
-                tag = (
-                  <textarea
-                    onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                handleSubmit(e);
-                            }
-                        }}
-                    className={'form__input'}
-                    onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
-                    type={type}
-                    name={name}
-                    id={name}
-                    value={state[name]}
-                  />
-                );
-            } else {
-                tag = (
-                  <input
-                    onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                handleSubmit(e);
-                            }
-                        }}
-                    className={'form__input'}
-                    onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
-                    type={type}
-                    name={name}
-                    id={name}
-                    value={state[name]}
-                  />
-                );
-            }
-
-            return (
-              <div key={name}>
-                <label
-                  className={'form__label'}
-                  htmlFor={name}
-                >
-                  {name}*{tag}
-                </label>
-              </div>
-            );
-        });
+          const tag = (
+            <Component
+              onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                          handleSubmit(e);
+                      }
+                  }}
+              className={'form__input'}
+              onChange={(e) => dispatch({ type: 'change', key: name, value: e.target.value })}
+              type={type}
+              name={name}
+              id={name}
+              value={state[name]}
+            />
+          );
+          
+          return (
+            <div key={name}>
+              <label
+                className={'form__label'}
+                htmlFor={name}
+              >
+                {name}*{tag}
+              </label>
+            </div>
+          );
+      });
     };
 
     const renderErros = () => {

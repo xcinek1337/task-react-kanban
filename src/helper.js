@@ -13,9 +13,9 @@ export function validate(data, values) {
 export function getInitFormValues(){
 
     const fieldsList = [
-        { name: 'name', type: 'text', defaultValue: '', validation: { isReq: true } },
+        { name: 'name', type: 'input', defaultValue: '', validation: { isReq: true } },
         { name: 'describe', type: 'textarea', validation: { isReq: false } },
-        { name: 'user', type: 'text', defaultValue: '', validation: { isReq: true } },
+        { name: 'user', type: 'input', defaultValue: '', validation: { isReq: true } },
     ];
     
     const init = {};
