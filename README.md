@@ -28,11 +28,11 @@ To view the project locally, follow these steps:
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/kanban-board.git
+    git clone https://github.com/xcinek1337/task-react-kanban.git
     ```
 2. Navigate to the project directory:
     ```sh
-    cd kanban-board
+    cd task-react-kanban
     ```
 3. Install dependencies:
     ```sh
