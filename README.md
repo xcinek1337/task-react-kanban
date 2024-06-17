@@ -1,5 +1,7 @@
 # React - Kanban Board Project
 
+![kanban-readme](https://github.com/xcinek1337/task-react-kanban/assets/125750465/990fcb2c-4529-4da4-b8e9-52fae4a14602)
+
 Welcome to my React Kanban Board project! This is a more advanced project I developed to enhance my skills in React, focusing on state management and user interface design. The Kanban board is designed to help users manage tasks effectively, with a strict structure of four columns and a limit of four tasks per column.
 
 ## Features
